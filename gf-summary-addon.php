@@ -38,6 +38,8 @@ class GF_Summary_AddOn_Bootstrap {
         if ( ! method_exists( 'GFForms', 'include_addon_framework' ) ) {
             return;
         }
+
+        
  
 		//include our class
         require_once( 'class-gravitysummaryaddon.php' );

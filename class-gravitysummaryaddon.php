@@ -32,7 +32,7 @@ class GFSummaryAddOn extends GFAddOn {
 	/**
 	 * Return the scripts which should be enqueued.
 	 *
-	 * @return array
+	 * @return Array
 	 */
 	public function scripts() {
 		$scripts = array(
@@ -70,7 +70,7 @@ class GFSummaryAddOn extends GFAddOn {
 	/**
 	 * Return the stylesheets which should be enqueued.
 	 *
-	 * @return array
+	 * @return Array
 	 */
 	public function styles() {
 		$styles = array(
@@ -101,12 +101,20 @@ class GFSummaryAddOn extends GFAddOn {
         parent::init();
         // add tasks or filters here that you want to perform both in the backend and frontend and for ajax requests
 		
-		/** add our retrieve function to admin ajax**/
-		add_action( 'wp_ajax_retrieve_gravity_summary_fields', 'retrieve_gravity_summary_fields' );
-		add_action( 'wp_ajax_nopriv_retrieve_gravity_summary_fields', 'retrieve_gravity_summary_fields' );
+		//get the ajaxurl for frontend ajax calls
+        add_action( 'wp_enqueue_scripts', 'add_frontend_ajax' );
 		
-		add_action( 'wp_ajax_gravity_summary_retrieve_field_object', 'gravity_summary_retrieve_field_object' );
-		add_action( 'wp_ajax_nopriv_gravity_summary_retrieve_field_object', 'gravity_summary_retrieve_field_object' );
+        function add_frontend_ajax() {
+			wp_enqueue_script( 'summary_change_js',  plugin_dir_url(__FILE__) . '/js/summary-change.js', array('jquery') );
+            wp_localize_script( 'summary_change_js', 'frontendajax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' )));
+        }
+  	 	
+		/** add our retrieve function to admin ajax**/
+		add_action( 'wp_ajax_gotrgf_retrieve_gravity_summary_fields', array('gotrgf_retrieve_summary_fields', 'retrieve_gravity_summary_fields') );
+		add_action( 'wp_ajax_nopriv_gotrgf_retrieve_gravity_summary_fields', array('gotrgf_retrieve_summary_fields', 'retrieve_gravity_summary_fields') );
+		
+		add_action( 'wp_ajax_gotrgf_gravity_summary_retrieve_field_object', array('gotrgf_retrieve_summary_fields', 'gravity_summary_retrieve_field_object') );
+		add_action( 'wp_ajax_nopriv_gotrgf_gravity_summary_retrieve_field_object', array('gotrgf_retrieve_summary_fields', 'gravity_summary_retrieve_field_object') );
 		
     }
  
@@ -169,9 +177,11 @@ class GFSummaryAddOn extends GFAddOn {
 		//Filter to add a new tooltip
 		add_filter( 'gform_tooltips', 'add_encryption_tooltips' );
 		function add_encryption_tooltips( $tooltips ) {
-			$tooltips['form_field_summary_setting'] = "<h6>Live summary</h6>Check this box to include this field in the live summary";
-			
-			 return $tooltips;
+			//$tooltips['form_field_summary_setting'] = "<h6>Live summary</h6>Check this box to include this field in the live summary";
+			$title = esc_html("Live summary");;
+			$description = esc_html("Check this box to include this field in the live summary");
+			sprintf("<h6>%s</h6> <p>%s</p>",$title,$description);
+			return $tooltips;
 		}
 		
 		
@@ -199,7 +209,7 @@ class GFSummaryAddOn extends GFAddOn {
                                    'label' => 'Show total in summary',
                                    'name'  => 'show_total',
                                    'default_value' => 1,
-									'tooltip' => 'If this setting is turned on and there is at least one product in the form than a form total will be shown at the bottom of the summary.',
+								   'tooltip' => 'If this setting is turned on and there is at least one product in the form than a form total will be shown at the bottom of the summary.',
                                 ),
 					),
 			
@@ -239,6 +249,11 @@ class GFSummaryAddOn extends GFAddOn {
         // add tasks or filters here that you want to perform only in the front end
 		
 		add_filter( 'gform_get_form_filter', function ( $form_string, $form ) {
+
+			//check if our class exists
+			if(!class_exists("gotrgf_retrieve_summary_fields")) {
+				return $form_string;
+			}
 			
 			if (!$form['show_summary']) {//setting is turned off so don't add summary markup
 				return $form_string;
@@ -248,13 +263,13 @@ class GFSummaryAddOn extends GFAddOn {
 			$form_string_before = "<div class='form_container'><div class='flex-child first-child'>" . $form_string;
 			
 			//check if this form has at least one product field in it
-			$products = product_fields_found($form["id"]);
+			$products = gotrgf_retrieve_summary_fields::product_fields_found($form["id"]);
 			
 			//check if the form total setting is switched to on
 			$show_total = $form["show_total"];
 			
 			if ($products == true and $show_total == "on") { // include the total if it has a product field and it is switched on
-				$total_string = "<div class='summary_total'><p><strong>Total: </strong> <span class='price_amount'></span></p></div>";
+				$total_string = sprintf("<div class='summary_total'><p><strong>%s </strong> <span class='price_amount'></span></p></div>", "Total:");
 			} else {
 				$total_string = "";
 			}	

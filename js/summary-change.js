@@ -6,23 +6,21 @@
  * Ajax handler to retrieve all summaryfields when the form loads
  * Places the result in the window.fields
  */
-function retrieve_fields(form_id) {
-	var ajaxurl = 'https://'+window.location.host+'/wp-admin/admin-ajax.php';
+function gotrgf_retrieve_fields(form_id) {
+	//var ajaxurl = 'https://'+window.location.host+'/wp-admin/admin-ajax.php';
 			   
 	jQuery.ajax({
-		url: ajaxurl,		
+		url: frontendajax.ajaxurl,		
 		type: 'GET',
 		data: {
-			'action':'retrieve_gravity_summary_fields', 
+			'action':'gotrgf_retrieve_gravity_summary_fields', 
 			'formid': form_id
 		},
 		
-		success: function(data) {				
-			console.log("SUCCESS!");
-			console.log(data);
+		success: function(data) {
 			window.fields = data;
 			if (window.fields) {
-				 gravity_summary_update(formId);
+				 gotrgf_gravity_summary_update(formId);
 			 }
 			
 		},
@@ -38,21 +36,19 @@ function retrieve_fields(form_id) {
  * AJAX handler to get a full JSON form object from a PHP function
  **/
 
-function retrieve_one_field(form_id, field_id) {
-	var ajaxurl = 'https://'+window.location.host+'/wp-admin/admin-ajax.php';
+function gotrgf_retrieve_one_field(form_id, field_id) {
+	//var ajaxurl = 'https://'+window.location.host+'/wp-admin/admin-ajax.php';
 			   
 	jQuery.ajax({
-		url: ajaxurl,		
+		url: frontendajax.ajaxurl,	
 		type: 'GET',
 		data: {
-			'action':'gravity_summary_retrieve_field_object', 
+			'action':'gotrgf_gravity_summary_retrieve_field_object', 
 			'formid': form_id,
 			'fieldid': field_id,
 		},
 		
-		success: function(data) {				
-			console.log("SUCCESS!");
-			console.log(data);
+		success: function(data) {
 			return data;
 			
 		},
@@ -77,7 +73,7 @@ function retrieve_one_field(form_id, field_id) {
  * update the summary
  * outputs the summary to the html
  **/
-function gravity_summary_update( formId ) {
+function gotrgf_gravity_summary_update( formId ) {
       
         //ids of the fields we need to show in the summary if they have a value
         var summary_fields = window.fields;
@@ -176,7 +172,7 @@ function gravity_summary_update( formId ) {
 /** Form load **/
  jQuery(document).on('gform_post_render', function(event, form_id, current_page){ 
      //load all the fields that need to be in the summary
-	 retrieve_fields(form_id); 
+	 gotrgf_retrieve_fields(form_id); 
  });
 
 
@@ -189,11 +185,11 @@ function gravity_summary_update( formId ) {
  **/
 
 gform.addAction( 'gform_input_change', function( elem, formId, fieldId ) {
-    gravity_summary_update(formId);
+    gotrgf_gravity_summary_update(formId);
 }, 10, 3 );
 
 gform.addAction('gform_post_conditional_logic_field_action', function (formId, action, targetId, defaultValues, isInit) {
-	gravity_summary_update(formId);
+	gotrgf_gravity_summary_update(formId);
 });
 
 
