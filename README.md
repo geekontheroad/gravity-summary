@@ -1,7 +1,10 @@
 # gravity-summary
-Plugin to show a summary for a gravity forms
+This plugin will show a live summary next to any gravity forms. The summary will be updated while the user enters information or makes changes.
 
 #### Gravity forms is required to use this plugin ####
+
+# Demo #
+<https://gravitysummary.geekontheroad.com/>
 
 # How does it work? #
 1. Install the plugin
