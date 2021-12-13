@@ -74,39 +74,11 @@ Yes, send me a message and tell me what you would like and I will do my best to 
 
 == Changelog ==
 
-= 0.1 =
+= 1.0.2 =
+Initial Release
+Sanitize and validate
+Rename function and class names
+
+= 1.0.1 =
 Initial Release
 
-== Upgrade Notice ==
-
-
-
-== A brief Markdown Example ==
-
-Markdown is what the parser uses to process much of the readme file.
-
-[markdown syntax]: https://daringfireball.net/projects/markdown/syntax
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Links require brackets and parenthesis:
-
-Here's a link to [WordPress](https://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax]. Link titles are optional, naturally.
-
-Blockquotes are email style:
-
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-And Backticks for code:
-
-`<?php code(); ?>`
