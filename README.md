@@ -1,7 +1,6 @@
 # gravity-summary
-<<<<<<< HEAD
-<h2>Plugin to show a summary for a gravity forms</h2>
-=======
+
+# Plugin to show a summary for a gravity forms #
 This plugin will show a live summary next to any gravity forms. The summary will be updated while the user enters information or makes changes.
 
 #### Gravity forms is required to use this plugin ####
@@ -38,5 +37,5 @@ This plugin will show a live summary next to any gravity forms. The summary will
 #### Conditional logic supported ####
 #### Hidden fields are not yet supported. ####
 
->>>>>>> f0a8f46048266e5a74c095416ad34e3aa75faaf2
+
 
